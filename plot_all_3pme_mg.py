@@ -139,14 +139,25 @@ def plot_uv(ax, dirname, filename, yaxislabel, ylim, yaxisticks, xlim, xaxistick
             axins = inset_axes(ax[counter], width="75%", height="75%", bbox_to_anchor=[0.05, 0.44, 0.55, 0.55], bbox_transform=ax[counter].transAxes, borderpad=0.2)
             axins.plot(t_dummy, sim_a, color='b', linewidth=3.0)
             axins.plot(t, a, color='k', linewidth=0.0, marker='o', markersize=3) 
-            axins.set_xlim([15.0, 60.0])
-            axins.set_ylim([0.845, 0.895])
             axins.tick_params(axis='x', direction='out', width=2, length=3, pad=0.0, top=False)
             axins.tick_params(axis='y', direction='out', width=2, length=3, pad=0.0, right=False)
-            axins.set_yticks([0.85, 0.87, 0.89])
-            axins.set_yticklabels(['%3.2f'%ele for ele in [0.85, 0.87, 0.89]], fontsize=fs)
-            axins.set_xticks([15., 35., 55.])
-            axins.set_xticklabels(['%d'%ele for ele in [15., 35., 55.]], fontsize=fs)
+            if "mg_1" in dataname:
+                axins.set_xlim([15.0, 70.0])
+                axins.set_ylim([0.67, 0.70])
+                axins.set_yticks([0.67, 0.69])
+                axins.set_yticklabels(['%3.2f'%ele for ele in [0.67, 0.69]], fontsize=fs)
+            elif "mg_2" in dataname:
+                axins.set_xlim([20.0, 70.0])
+                axins.set_ylim([0.66, 0.69])
+                axins.set_yticks([0.66, 0.68])
+                axins.set_yticklabels(['%3.2f'%ele for ele in [0.66, 0.68]], fontsize=fs)
+            else:
+                axins.set_xlim([15.0, 70.0])
+                axins.set_ylim([0.66, 0.69])
+                axins.set_yticks([0.66, 0.68])
+                axins.set_yticklabels(['%3.2f'%ele for ele in [0.66, 0.68]], fontsize=fs)
+            axins.set_xticks([20., 40., 60.])
+            axins.set_xticklabels(['%d'%ele for ele in [20., 40., 60.]], fontsize=fs)
 
         elif fit_type == "3state_fixtherm":
             sim_a = uv_hairpin_es(t+273.16, bf['mss'].iloc[dummy], bf['bss'].iloc[dummy], bf['mds'].iloc[dummy], bf['bds'].iloc[dummy], bf['mds2'].iloc[dummy], bf['bds2'].iloc[dummy], bf['delHconf'].iloc[dummy], bf['delSconf'].iloc[dummy], -1.0*bf['delHm'].iloc[dummy], -1.0 * bf['delSm'].iloc[dummy])
@@ -236,12 +247,14 @@ def plot_uv(ax, dirname, filename, yaxislabel, ylim, yaxisticks, xlim, xaxistick
         counter = counter + 1
     print
    
-fig, axarr = plt.subplots(2, 3, figsize=(16, 9.0))
+fig, axarr = plt.subplots(4, 3, figsize=(19, 19.0))
 
 plot_uv(axarr[0, :], '3pme_mg/2state_final/', '2state.csv', 'TAR-C24U25A35 + 3mM Mg' + '$^{2+}$' + '\n2-state\nA' + '$_{260}$', [0.65, 0.80], np.arange(0.65, 0.81, 0.05), [10.0, 100.0], np.arange(20.0, 101.0, 20), 0, '2state')
-plot_uv(axarr[1, :], '3pme_mg/3state_free_final/', '3state_free.csv', 'TAR-C24U25A35 + 3mM Mg' + '$^{2+}$' + '\n3-state free\nA' + '$_{260}$', [0.65, 0.80], np.arange(0.65, 0.85, 0.05), [10.0, 100.0], np.arange(20.0, 101.0, 20), 1, '3state_free')
+plot_uv(axarr[1, :], '3pme_mg/3state_free_final/', '3state_free.csv', 'TAR-C24U25A35 + 3mM Mg' + '$^{2+}$' + '\n3-state free\nA' + '$_{260}$', [0.65, 0.80], np.arange(0.65, 0.85, 0.05), [10.0, 100.0], np.arange(20.0, 101.0, 20), 0, '3state_free')
+plot_uv(axarr[2, :], '3pme_mg/3state_constrain/', '3state_constrain_7pct.csv', 'TAR-C24U25A35 + 3mM Mg' + '$^{2+}$' + '\n3-state p' + '$_{B}$' + ' 7%\nA' + '$_{260}$', [0.65, 0.80], np.arange(0.65, 0.85, 0.05), [10.0, 100.0], np.arange(20.0, 101.0, 20), 0, '3state_constrain')
+plot_uv(axarr[3, :], '3pme_mg/3state_constrain/', '3state_constrain_14pct.csv', 'TAR-C24U25A35 + 3mM Mg' + '$^{2+}$' + '\n3-state p' + '$_{B}$' + ' 14%\nA' + '$_{260}$', [0.65, 0.80], np.arange(0.65, 0.85, 0.05), [10.0, 100.0], np.arange(20.0, 101.0, 20), 1, '3state_constrain')
 
 for dummy in range(3):
-    axarr[1, dummy].set_xlabel('Temperature (' + '$^\circ$' + 'C)', fontsize=fs)
+    axarr[3, dummy].set_xlabel('Temperature (' + '$^\circ$' + 'C)', fontsize=fs)
 plt.savefig('3pme_mg.pdf')
 
